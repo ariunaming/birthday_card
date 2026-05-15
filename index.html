@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>С Днём Рождения, Тёмик❤️</title>
+
+<style>
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #cceeff, #e6f7ff);
+    font-family: Arial;
+    text-align: center;
+    overflow: hidden;
+}
+
+.cover {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #99ccff, #cce6ff);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+    transition: transform 1s ease;
+}
+
+.cover.open {
+    transform: rotateY(90deg);
+}
+
+button {
+    padding: 15px 30px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    background: #3399cc;
+    color: white;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.container {
+    margin-top: 40px;
+    opacity: 0;
+    transition: opacity 1s;
+}
+
+.container.show {
+    opacity: 1;
+}
+
+h1 {
+    color: #3399cc;
+}
+
+/* ТОРТ */
+.cake {
+    position: relative;
+    margin: 40px auto;
+    width: 220px;
+}
+
+.layer {
+    width: 220px;
+    height: 60px;
+    background: #ffd966;
+    border-radius: 15px;
+    margin-top: 8px;
+    position: relative;
+}
+
+.cream {
+    position: absolute;
+    top: -10px;
+    width: 100%;
+    height: 20px;
+    background: white;
+    border-radius: 50%;
+}
+
+.decor {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: pink;
+    border-radius: 50%;
+}
+
+.candle {
+    width: 8px;
+    height: 30px;
+    background: white;
+    position: absolute;
+    top: -25px;
+}
+
+.flame {
+    width: 12px;
+    height: 18px;
+    background: radial-gradient(circle, yellow 0%, orange 60%, red 100%);
+    border-radius: 50%;
+    position: absolute;
+    top: -18px;
+    left: -2px;
+    animation: flameMove 0.15s infinite alternate;
+}
+
+@keyframes flameMove {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.3) translateY(-2px); }
+}
+
+/* конфетти */
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    animation: fall linear infinite;
+}
+
+@keyframes fall {
+    to { transform: translateY(100vh); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="cover" id="cover">
+    <h1>💌 Открытка для Артёма</h1>
+    <button onclick="openCard()">Открыть</button>
+</div>
+
+<div class="container" id="main">
+
+<h1>С Днём Рождения, любимый 💙</h1>
+<p>Загадай желание и ДУНЬ на свечи 🎂💨</p>
+
+<div class="cake">
+
+    <div class="candle" style="left:20px"><div class="flame"></div></div>
+    <div class="candle" style="left:60px"><div class="flame"></div></div>
+    <div class="candle" style="left:100px"><div class="flame"></div></div>
+    <div class="candle" style="left:140px"><div class="flame"></div></div>
+    <div class="candle" style="left:180px"><div class="flame"></div></div>
+
+    <div class="layer">
+        <div class="cream"></div>
+        <div class="decor" style="left:20px; top:20px;"></div>
+        <div class="decor" style="left:80px; top:30px;"></div>
+        <div class="decor" style="left:150px; top:25px;"></div>
+    </div>
+
+    <div class="layer">
+        <div class="cream"></div>
+        <div class="decor" style="left:50px; top:25px;"></div>
+        <div class="decor" style="left:120px; top:20px;"></div>
+    </div>
+
+</div>
+
+<button onclick="startMic()">Включить микрофон 🎤</button>
+
+<p id="message" style="display:none;">
+💙 Пусть все твои мечты сбываются!  
+Я тебя очень сильно люблю 💕
+</p>
+
+</div>
+
+<script>
+
+function openCard() {
+    document.getElementById("cover").classList.add("open");
+    setTimeout(() => {
+        document.getElementById("cover").style.display = "none";
+        document.getElementById("main").classList.add("show");
+    }, 800);
+}
+
+// 🎤 МИКРОФОН
+async function startMic() {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const audioContext = new AudioContext();
+    const mic = audioContext.createMediaStreamSource(stream);
+    const analyser = audioContext.createAnalyser();
+
+    mic.connect(analyser);
+    analyser.fftSize = 256;
+
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+    function checkVolume() {
+        analyser.getByteFrequencyData(dataArray);
+        let volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+        if (volume > 50) { // порог "дуновения"
+            blowCandle();
+        }
+
+        requestAnimationFrame(checkVolume);
+    }
+
+    checkVolume();
+}
+
+// задуть
+function blowCandle() {
+    document.querySelectorAll(".flame").forEach(f => f.style.display = "none");
+    document.getElementById("message").style.display = "block";
+}
+
+// конфетти
+for (let i = 0; i < 60; i++) {
+    let c = document.createElement("div");
+    c.classList.add("confetti");
+
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.background = ["#ff4d6d","#ffd966","#66ccff","#99ff99","#ff99cc"][Math.floor(Math.random()*5)];
+    c.style.animationDuration = (Math.random() * 3 + 2) + "s";
+
+    document.body.appendChild(c);
+}
+</script>
+
+</body>
+</html>
