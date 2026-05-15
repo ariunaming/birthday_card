@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>С Днём Рождения ❤️</title>
+<title>С Днём Рождения, Артём❤️</title>
 
 <style>
 body {
@@ -13,7 +13,7 @@ body {
     overflow: hidden;
 }
 
-/* ПЕРВАЯ СТРАНИЦА */
+/* СТАРТОВАЯ ОБЛОЖКА */
 .cover {
     position: absolute;
     width: 100%;
@@ -42,7 +42,7 @@ button {
     margin-top: 15px;
 }
 
-/* ОСНОВНАЯ СТРАНИЦА */
+/* ОСНОВНОЙ КОНТЕНТ */
 .container {
     margin-top: 40px;
     opacity: 0;
@@ -57,10 +57,10 @@ h1 {
     color: #3399cc;
 }
 
-/* ТОРТ */
+/* ТОРТ (ОПУЩЕН ВНИЗ) */
 .cake {
     position: relative;
-    margin: 40px auto;
+    margin: 120px auto 40px auto;
     width: 220px;
 }
 
@@ -126,18 +126,32 @@ h1 {
 @keyframes fall {
     to { transform: translateY(100vh); }
 }
+
+/* ВТОРАЯ КАРТИНКА (ЦЕНТР ЭКРАНА) */
+#finalImage {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 500px;
+    border-radius: 20px;
+    z-index: 999;
+}
+
 </style>
 </head>
 
 <body>
 
-<!-- СТАРТОВАЯ СТРАНИЦА -->
+<!-- ОБЛОЖКА -->
 <div class="cover" id="cover">
     <img src="images/photo1.jpg" style="width:260px;border-radius:15px;">
     <button onclick="openCard()">Открыть</button>
 </div>
 
-<!-- ОСНОВНАЯ СТРАНИЦА -->
+<!-- ОСНОВА -->
 <div class="container" id="main">
 
 <h1>С Днём Рождения 💙</h1>
@@ -174,9 +188,7 @@ h1 {
 </p>
 
 <!-- ВТОРАЯ КАРТИНКА -->
-<img id="finalImage"
-     src="images/photo2.jpg"
-     style="display:none;width:260px;margin-top:20px;border-radius:15px;">
+<img id="finalImage" src="images/photo2.jpg">
 
 </div>
 
@@ -191,7 +203,6 @@ function openCard() {
         document.getElementById("main").classList.add("show");
     }, 800);
 }
-
 
 // микрофон
 async function startMic() {
@@ -221,8 +232,7 @@ async function startMic() {
     checkVolume();
 }
 
-
-// ЗАДУТЬ СВЕЧИ
+// задуть свечи
 function blowCandle() {
     document.querySelectorAll(".flame").forEach(f => f.style.display = "none");
 
@@ -230,8 +240,7 @@ function blowCandle() {
     document.getElementById("finalImage").style.display = "block";
 }
 
-
-// КОНФЕТТИ
+// конфетти
 for (let i = 0; i < 60; i++) {
     let c = document.createElement("div");
     c.classList.add("confetti");
